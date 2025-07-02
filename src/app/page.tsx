@@ -59,6 +59,13 @@ export default function Home() {
     }
   }
 
+  async function handleDelete(postId: number) {
+    setLoading(true);
+    await supabase.from('posts').delete().eq('id', postId);
+    fetchPosts();
+    setLoading(false);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -131,6 +138,15 @@ export default function Home() {
                   <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
                 </div>
                 <div className="text-gray-700 whitespace-pre-line text-base mt-1">{post.content}</div>
+                {post.author === name.trim() && (
+                  <button
+                    className="mt-2 text-red-500 hover:underline text-sm"
+                    onClick={() => handleDelete(post.id)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
             {posts.length === 0 && !loading && (
