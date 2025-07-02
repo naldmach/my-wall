@@ -20,6 +20,16 @@ export default function Home() {
   // Fetch posts from Supabase on mount
   useEffect(() => {
     fetchPosts();
+    // Test Supabase connection
+    async function testConnection() {
+      const { error } = await supabase.from('posts').select('id').limit(1);
+      if (error) {
+        console.error('Supabase connection failed:', error.message);
+      } else {
+        console.log('Supabase connection successful!');
+      }
+    }
+    testConnection();
   }, []);
 
   async function fetchPosts() {
