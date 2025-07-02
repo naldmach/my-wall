@@ -1,51 +1,52 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
+import { supabase } from './supabaseClient';
 
 interface Post {
   id: number;
   author: string;
   content: string;
-  time: string;
+  created_at: string;
 }
 
 export default function Home() {
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(false);
   const maxChars = 280;
 
-  // Load name from sessionStorage and posts from localStorage on mount
+  // Fetch posts from Supabase on mount
   useEffect(() => {
-    const savedName = sessionStorage.getItem('wall_name') || '';
-    setName(savedName);
-    const savedPosts = localStorage.getItem('wall_posts');
-    if (savedPosts) {
-      setPosts(JSON.parse(savedPosts));
-    }
+    fetchPosts();
   }, []);
 
-  // Save posts to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('wall_posts', JSON.stringify(posts));
-  }, [posts]);
+  async function fetchPosts() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data) {
+      setPosts(data);
+    }
+    setLoading(false);
+  }
 
-  // Save name to sessionStorage whenever it changes
-  useEffect(() => {
-    sessionStorage.setItem('wall_name', name);
-  }, [name]);
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!name.trim() || !content.trim()) return;
-    const newPost: Post = {
-      id: Date.now(),
-      author: name.trim(),
-      content: content.trim(),
-      time: 'now',
-    };
-    setPosts([newPost, ...posts]);
-    setContent('');
+    const { error } = await supabase.from('posts').insert([
+      {
+        author: name.trim(),
+        content: content.trim(),
+      },
+    ]);
+    if (!error) {
+      setContent('');
+      fetchPosts();
+    }
   }
 
   return (
@@ -105,9 +106,9 @@ export default function Home() {
               <button
                 type="submit"
                 className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50"
-                disabled={!content.trim() || !name.trim()}
+                disabled={!content.trim() || !name.trim() || loading}
               >
-                Share
+                {loading ? 'Sharing...' : 'Share'}
               </button>
             </div>
           </form>
@@ -117,11 +118,14 @@ export default function Home() {
               <div key={post.id} className="bg-white rounded-2xl shadow p-6 border border-gray-100">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-bold text-gray-800 text-base">{post.author}</span>
-                  <span className="text-xs text-gray-400">{post.time}</span>
+                  <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
                 </div>
                 <div className="text-gray-700 whitespace-pre-line text-base mt-1">{post.content}</div>
               </div>
             ))}
+            {posts.length === 0 && !loading && (
+              <div className="text-center text-gray-400">No posts yet.</div>
+            )}
           </div>
         </main>
       </div>
