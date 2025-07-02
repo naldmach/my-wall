@@ -69,7 +69,7 @@ export default function Home() {
           <img
             src="/donald.jpg"
             alt="Donald Machon"
-            className="w-56 h-40 rounded-none object-cover mb-6 shadow-lg border-4 border-white"
+            className="w-72 h-48 rounded-none object-cover mb-6 shadow-lg border-4 border-white"
           />
           <h1 className="text-2xl font-bold mb-1 text-gray-900 text-center w-full">Donald Machon</h1>
           <div className="text-gray-500 mb-4 text-center w-full">wall</div>
