@@ -1,61 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
+
+interface Post {
+  id: number;
+  author: string;
+  content: string;
+  time: string;
+}
 
 export default function Home() {
+  const [name, setName] = useState('');
   const [content, setContent] = useState('');
+  const [posts, setPosts] = useState<Post[]>([]);
   const maxChars = 280;
-  // Placeholder posts
-  const posts = [
-    {
-      id: 1,
-      author: "Donald Machon",
-      content: "It worked!",
+
+  // Load name from sessionStorage and posts from localStorage on mount
+  useEffect(() => {
+    const savedName = sessionStorage.getItem('wall_name') || '';
+    setName(savedName);
+    const savedPosts = localStorage.getItem('wall_posts');
+    if (savedPosts) {
+      setPosts(JSON.parse(savedPosts));
+    }
+  }, []);
+
+  // Save posts to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('wall_posts', JSON.stringify(posts));
+  }, [posts]);
+
+  // Save name to sessionStorage whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem('wall_name', name);
+  }, [name]);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!name.trim() || !content.trim()) return;
+    const newPost: Post = {
+      id: Date.now(),
+      author: name.trim(),
+      content: content.trim(),
       time: 'now',
-    },
-    {
-      id: 2,
-      author: "Donald Machon",
-      content: "Hello world! This is a live website.",
-      time: 'now',
-    },
-    {
-      id: 3,
-      author: "Shannon",
-      content: "Hey Donald, did you debug your coffee maker yet? Last cup tasted like JavaScript errors.",
-      time: '2h',
-    },
-    {
-      id: 4,
-      author: "Airon",
-      content: "Donald, saw your last coding session—pretty sure you broke Stack Overflow again! 🧯",
-      time: '3h',
-    },
-    {
-      id: 5,
-      author: "Mark",
-      content: "Donald, are you still coding in pajamas, or have you upgraded to full-time sweatpants mode?",
-      time: '4h',
-    },
-    {
-      id: 6,
-      author: "Lana",
-      content: "Donald, rumor has it your computer has more stickers than code running on it. Confirm?",
-      time: '5h',
-    },
-    {
-      id: 7,
-      author: "Rhoda",
-      content: "Yo Donald, just pulled an all-nighter on the assignment. Turns out sleep deprivation doesn't improve coding skills. Weird!",
-      time: '6h',
-    },
-    {
-      id: 8,
-      author: "Nerissa",
-      content: "Donald, when are we gonna deploy your latest dance moves to production? #AgileDancer",
-      time: '8h',
-    },
-  ];
+    };
+    setPosts([newPost, ...posts]);
+    setContent('');
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,7 +81,16 @@ export default function Home() {
         {/* Main Content */}
         <main className="flex-1">
           {/* Input Box */}
-          <form className="bg-white rounded-2xl shadow p-6 mb-8 border border-gray-200">
+          <form className="bg-white rounded-2xl shadow p-6 mb-8 border border-gray-200" onSubmit={handleSubmit}>
+            <input
+              className="w-full border border-gray-300 rounded-lg p-4 text-gray-900 mb-3 focus:outline-blue-400 text-base"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              maxLength={40}
+              onChange={e => setName(e.target.value)}
+              required
+            />
             <textarea
               className="w-full border border-gray-300 rounded-lg p-4 text-gray-900 resize-none focus:outline-blue-400 text-base"
               rows={3}
@@ -98,13 +98,14 @@ export default function Home() {
               placeholder="What's on your mind?"
               value={content}
               onChange={e => setContent(e.target.value)}
+              required
             />
             <div className="flex items-center justify-between mt-2">
               <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
               <button
                 type="submit"
                 className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50"
-                disabled={!content.trim()}
+                disabled={!content.trim() || !name.trim()}
               >
                 Share
               </button>
