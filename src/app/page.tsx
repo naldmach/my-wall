@@ -79,13 +79,6 @@ export default function Home() {
     }
   }
 
-  async function handleDelete(postId: number) {
-    setLoading(true);
-    await supabase.from('posts').delete().eq('id', postId);
-    fetchPosts();
-    setLoading(false);
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -177,15 +170,6 @@ export default function Home() {
                     alt="Post photo"
                     className="mt-3 max-w-full max-h-80 rounded-lg border"
                   />
-                )}
-                {post.author === name.trim() && (
-                  <button
-                    className="mt-2 text-red-500 hover:underline text-sm"
-                    onClick={() => handleDelete(post.id)}
-                    disabled={loading}
-                  >
-                    Delete
-                  </button>
                 )}
               </div>
             ))}
