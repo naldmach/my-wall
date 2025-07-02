@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent, useRef } from 'react';
 import { supabase } from './supabaseClient';
 
 interface Post {
@@ -8,6 +8,7 @@ interface Post {
   author: string;
   content: string;
   created_at: string;
+  photo_url?: string;
 }
 
 export default function Home() {
@@ -16,6 +17,8 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
   const maxChars = 280;
+  const [photo, setPhoto] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch posts from Supabase on mount
   useEffect(() => {
@@ -47,14 +50,31 @@ export default function Home() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!name.trim() || !content.trim()) return;
+    let photo_url = null;
+    if (photo) {
+      const fileExt = photo.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('wall-photos')
+        .upload(fileName, photo, { upsert: false });
+      if (!uploadError && uploadData) {
+        const { data: publicUrlData } = supabase.storage
+          .from('wall-photos')
+          .getPublicUrl(uploadData.path);
+        photo_url = publicUrlData.publicUrl;
+      }
+    }
     const { error } = await supabase.from('posts').insert([
       {
         author: name.trim(),
         content: content.trim(),
+        photo_url,
       },
     ]);
     if (!error) {
       setContent('');
+      setPhoto(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       fetchPosts();
     }
   }
@@ -118,6 +138,19 @@ export default function Home() {
               onChange={e => setContent(e.target.value)}
               required
             />
+            <input
+              type="file"
+              accept="image/*"
+              className="block mt-3 mb-2"
+              ref={fileInputRef}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                if (e.target.files && e.target.files[0]) {
+                  setPhoto(e.target.files[0]);
+                } else {
+                  setPhoto(null);
+                }
+              }}
+            />
             <div className="flex items-center justify-between mt-2">
               <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
               <button
@@ -138,6 +171,13 @@ export default function Home() {
                   <span className="text-xs text-gray-400">{new Date(post.created_at).toLocaleString()}</span>
                 </div>
                 <div className="text-gray-700 whitespace-pre-line text-base mt-1">{post.content}</div>
+                {post.photo_url && (
+                  <img
+                    src={post.photo_url}
+                    alt="Post photo"
+                    className="mt-3 max-w-full max-h-80 rounded-lg border"
+                  />
+                )}
                 {post.author === name.trim() && (
                   <button
                     className="mt-2 text-red-500 hover:underline text-sm"
