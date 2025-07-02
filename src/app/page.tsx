@@ -131,7 +131,17 @@ export default function Home() {
               onChange={e => setContent(e.target.value)}
               required
             />
-            <div className="mt-3 mb-2">
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50"
+                disabled={!content.trim() || !name.trim() || loading}
+              >
+                {loading ? 'Sharing...' : 'Share'}
+              </button>
+            </div>
+            <div className="mt-4">
               <label
                 htmlFor="photo-upload"
                 className="inline-block cursor-pointer bg-blue-100 text-blue-700 px-4 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition"
@@ -152,16 +162,6 @@ export default function Home() {
                   }
                 }}
               />
-            </div>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50"
-                disabled={!content.trim() || !name.trim() || loading}
-              >
-                {loading ? 'Sharing...' : 'Share'}
-              </button>
             </div>
           </form>
           {/* Feed */}
