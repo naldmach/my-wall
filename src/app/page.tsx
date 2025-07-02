@@ -131,19 +131,21 @@ export default function Home() {
               onChange={e => setContent(e.target.value)}
               required
             />
-            <input
-              type="file"
-              accept="image/*"
-              className="block mt-3 mb-2"
-              ref={fileInputRef}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                if (e.target.files && e.target.files[0]) {
-                  setPhoto(e.target.files[0]);
-                } else {
-                  setPhoto(null);
-                }
-              }}
-            />
+            <label className="block mt-3 mb-2 text-sm font-medium text-gray-700">Upload a photo (optional):
+              <input
+                type="file"
+                accept="image/*"
+                className="block mt-1"
+                ref={fileInputRef}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setPhoto(e.target.files[0]);
+                  } else {
+                    setPhoto(null);
+                  }
+                }}
+              />
+            </label>
             <div className="flex items-center justify-between mt-2">
               <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
               <button
