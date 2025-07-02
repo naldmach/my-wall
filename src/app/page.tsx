@@ -1,103 +1,129 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [content, setContent] = useState('');
+  const maxChars = 280;
+  // Placeholder posts
+  const posts = [
+    {
+      id: 1,
+      author: "Donald Machon",
+      content: "It worked!",
+      time: 'now',
+    },
+    {
+      id: 2,
+      author: "Donald Machon",
+      content: "Hello world! This is a live website.",
+      time: 'now',
+    },
+    {
+      id: 3,
+      author: "Shannon",
+      content: "Hey Donald, did you debug your coffee maker yet? Last cup tasted like JavaScript errors.",
+      time: '2h',
+    },
+    {
+      id: 4,
+      author: "Airon",
+      content: "Donald, saw your last coding session—pretty sure you broke Stack Overflow again! 🧯",
+      time: '3h',
+    },
+    {
+      id: 5,
+      author: "Mark",
+      content: "Donald, are you still coding in pajamas, or have you upgraded to full-time sweatpants mode?",
+      time: '4h',
+    },
+    {
+      id: 6,
+      author: "Lana",
+      content: "Donald, rumor has it your computer has more stickers than code running on it. Confirm?",
+      time: '5h',
+    },
+    {
+      id: 7,
+      author: "Rhoda",
+      content: "Yo Donald, just pulled an all-nighter on the assignment. Turns out sleep deprivation doesn't improve coding skills. Weird!",
+      time: '6h',
+    },
+    {
+      id: 8,
+      author: "Nerissa",
+      content: "Donald, when are we gonna deploy your latest dance moves to production? #AgileDancer",
+      time: '8h',
+    },
+  ];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="w-full bg-blue-500 text-white text-lg font-bold px-8 py-3 shadow">
+        wall
+      </header>
+      <div className="flex max-w-5xl mx-auto mt-8 gap-10">
+        {/* Sidebar */}
+        <aside className="w-80 bg-white rounded-2xl shadow p-8 flex flex-col items-center">
+          <img
+            src="/donald.jpg"
+            alt="Donald Machon"
+            className="w-40 h-40 rounded-full object-cover mb-6 shadow-lg border-4 border-white"
+          />
+          <h1 className="text-2xl font-bold mb-1 text-gray-900 text-center w-full">Donald Machon</h1>
+          <div className="text-gray-500 mb-4 text-center w-full">wall</div>
+          <div className="w-full">
+            <div className="border rounded-xl p-4 mb-2 bg-gray-50">
+              <div className="font-semibold text-gray-700 mb-2">Information</div>
+              <div className="text-sm text-gray-600 mb-2">
+                <span className="block font-medium">Networks</span>
+                AISAT Alum
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="block font-medium">Current City</span>
+                Angeles City, Pampanga
+              </div>
+            </div>
+          </div>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1">
+          {/* Input Box */}
+          <form className="bg-white rounded-2xl shadow p-6 mb-8 border border-gray-200">
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-4 text-gray-900 resize-none focus:outline-blue-400 text-base"
+              rows={3}
+              maxLength={maxChars}
+              placeholder="What's on your mind?"
+              value={content}
+              onChange={e => setContent(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50"
+                disabled={!content.trim()}
+              >
+                Share
+              </button>
+            </div>
+          </form>
+          {/* Feed */}
+          <div className="space-y-6">
+            {posts.map(post => (
+              <div key={post.id} className="bg-white rounded-2xl shadow p-6 border border-gray-100">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-bold text-gray-800 text-base">{post.author}</span>
+                  <span className="text-xs text-gray-400">{post.time}</span>
+                </div>
+                <div className="text-gray-700 whitespace-pre-line text-base mt-1">{post.content}</div>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
