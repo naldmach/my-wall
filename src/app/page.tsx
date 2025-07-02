@@ -131,11 +131,18 @@ export default function Home() {
               onChange={e => setContent(e.target.value)}
               required
             />
-            <label className="block mt-3 mb-2 text-sm font-medium text-gray-700">Upload a photo (optional):
+            <div className="mt-3 mb-2">
+              <label
+                htmlFor="photo-upload"
+                className="inline-block cursor-pointer bg-blue-100 text-blue-700 px-4 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition"
+              >
+                Click to Add Photo
+              </label>
               <input
+                id="photo-upload"
                 type="file"
                 accept="image/*"
-                className="block mt-1"
+                className="hidden"
                 ref={fileInputRef}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   if (e.target.files && e.target.files[0]) {
@@ -145,7 +152,7 @@ export default function Home() {
                   }
                 }}
               />
-            </label>
+            </div>
             <div className="flex items-center justify-between mt-2">
               <span className="text-sm text-gray-500">{maxChars - content.length} characters remaining</span>
               <button
