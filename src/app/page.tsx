@@ -142,17 +142,13 @@ export default function Home() {
               </button>
             </div>
             <div className="mt-4">
-              <label
-                htmlFor="photo-upload"
-                className="inline-block cursor-pointer bg-blue-100 text-blue-700 px-4 py-2 rounded-lg border border-blue-300 hover:bg-blue-200 transition"
-              >
-                Click to Add Photo
-              </label>
+              <div style={{ color: 'red', fontWeight: 'bold', fontSize: '1.5rem', border: '2px solid red', padding: '1rem', marginBottom: '1rem' }}>
+                DEBUG: This is where the photo upload should appear!
+              </div>
               <input
-                id="photo-upload"
                 type="file"
                 accept="image/*"
-                className="hidden"
+                className="block border border-blue-500 p-2 text-lg bg-white"
                 ref={fileInputRef}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   if (e.target.files && e.target.files[0]) {
