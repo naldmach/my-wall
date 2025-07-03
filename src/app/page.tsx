@@ -12,6 +12,7 @@ interface Post {
 }
 
 export default function Home() {
+  console.log('DEBUG: Home component is rendering');
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
@@ -81,6 +82,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <div style={{ color: 'red', fontWeight: 'bold', fontSize: '2rem', border: '4px solid red', padding: '2rem', margin: '2rem', textAlign: 'center' }}>
+        DEBUG: If you see this, the latest code is running! (Top of page)
+      </div>
       {/* Header */}
       <header className="w-full bg-blue-500 text-white text-lg font-bold px-8 py-3 shadow">
         wall
